@@ -1,0 +1,28 @@
+{
+    "app-id": "app.sculpting.body",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "master",
+    "sdk": "org.gnome.Sdk",
+    "command": "body_sculpting",
+    "finish-args": [
+        "--device=all",
+        "--share=ipc",
+        "--socket=wayland",
+        "--socket=x11"
+    ],    
+    "modules": [
+        {
+            "name": "bodysculpting",
+            "buildsystem": "simple",
+            "build-commands": [
+                "install -D body_sculpting /app/bin/body_sculpting"
+            ],
+            "sources": [
+                {
+                    "type": "file",
+                    "path": "./target/aarch64-unknown-linux-gnu/release/body_sculpting"
+                }
+            ]
+        }
+    ]
+}

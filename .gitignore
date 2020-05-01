@@ -1,0 +1,7 @@
+/target
+
+# flatpak build artifacts
+/bodysculpting.flatpak
+/.flatpak-builder
+/_flatpak
+/myrepo
