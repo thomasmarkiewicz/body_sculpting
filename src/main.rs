@@ -55,6 +55,8 @@ fn build_ui() -> impl Widget<Reps> {
         8.0,
         Flex::column()
             .with_child(
+                // TODO: see calc example `op_button_label` for an example of a label with a custom background (round for example)
+                // TODO: see invalidations example `CircleView` for drawing a circle background/button
                 Label::new(|reps: &Reps, _env: &_| String::from(format!("{}", reps.reps.unwrap_or(reps.target_reps))))
                 .with_text_size(48.0)
                 .center()
