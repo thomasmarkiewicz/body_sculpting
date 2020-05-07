@@ -73,11 +73,11 @@ fn rep_button() -> impl Widget<Reps> {
     let label = Label::new(|reps: &Reps, _env: &_| {
         String::from(format!("{}", reps.reps.unwrap_or(reps.target_reps)))
     })
-    .with_text_size(36.0)
-    .center()
-    .on_click(|_ctx, reps, _env| {
-        reps.toggle();
-    });
+        .with_text_size(36.0)
+        .center()
+        .on_click(|_ctx, reps, _env| {
+            reps.toggle();
+        });
 
     let sized_box = SizedBox::new(label)
         .width(64.)
@@ -89,12 +89,18 @@ fn rep_button() -> impl Widget<Reps> {
 
 fn build_ui() -> impl Widget<Reps> {
     Padding::new(8.0, 
-        Flex::row().must_fill_main_axis(true)
-            .with_flex_child(rep_button(), 1.0)
-            .with_flex_child(rep_button(), 1.0)
-            .with_flex_child(rep_button(), 1.0)
-            .with_flex_child(rep_button(), 1.0)
-            .with_flex_child(rep_button(), 1.0)
+        Flex::row()
+        .with_flex_spacer(1.0)
+            .with_child(rep_button())
+            .with_flex_spacer(1.0)
+            .with_child(rep_button())
+            .with_flex_spacer(1.0)
+            .with_child(rep_button())
+            .with_flex_spacer(1.0)
+            .with_child(rep_button())
+            .with_flex_spacer(1.0)
+            .with_child(rep_button())
+            .with_flex_spacer(1.0)
     )
 }
 
