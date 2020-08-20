@@ -8,7 +8,7 @@ use druid::{
 };
 use log::info;
 
-use mobile_friendly_widgets::{AppBar, Scaffold};
+use mobile_friendly_widgets::{AppBar, FloatingActionButton, Scaffold};
 
 #[derive(Clone, Data, Lens)]
 struct State {
@@ -60,10 +60,18 @@ fn build_ui() -> impl Widget<State> {
     //let appBar = LensWrap::new(AppBar {}, lenses: state::title);
     //Padding::new(0.0, Flex::column().with_child(AppBar {}))
 
+    // AppBar
     let app_bar = AppBar::new(String::from("Hello World"));
+
+    // Body
     let label = Label::new("How are you?").with_text_size(18.0).center();
     let body = Padding::new(8.0, label);
-    let scaffold = Scaffold::new(app_bar, body);
+
+    // FloatingActionButton
+    let fab = FloatingActionButton::new("+");
+
+    // Scaffold
+    let scaffold = Scaffold::new(app_bar, body, fab);
     scaffold
 }
 
