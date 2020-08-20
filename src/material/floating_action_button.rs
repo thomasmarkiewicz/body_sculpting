@@ -130,13 +130,6 @@ impl<T: Data> Widget<T> for FloatingActionButton<T> {
 
         self.label_size = self.label.layout(layout_ctx, &label_bc, data, env);
 
-        /*
-        // HACK: to make sure we look okay at default sizes when beside a textbox,
-        // we make sure we will have at least the same height as the default textbox.
-        let min_height = env.get(theme::BORDERED_WIDGET_HEIGHT);
-        */
-
-        //bc.constrain(self.size)
         self.size
     }
 
@@ -149,7 +142,6 @@ impl<T: Data> Widget<T> for FloatingActionButton<T> {
         let rounded_rect = Rect::from_origin_size(Point::ORIGIN, size)
             .inset(-stroke_width / 2.0)
             .to_rounded_rect(size.width / 2.0);
-        //.to_rounded_rect(env.get(theme::BUTTON_BORDER_RADIUS)); // TODO: can I tweak this to get a circle?
 
         let bg_gradient = if is_active {
             LinearGradient::new(

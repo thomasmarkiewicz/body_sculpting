@@ -71,14 +71,12 @@ impl<T: Data> Widget<T> for Scaffold<T> {
         // layout body
         let loosened_bc = loosened_bc.shrink((0., app_bar_size.height));
         let body_size = self.body.layout(layout_ctx, &loosened_bc, data, env);
-        info!("body_size: {:?}", body_size);
         let rect = Rect::from_origin_size((0., app_bar_size.height), body_size);
         self.body.set_layout_rect(layout_ctx, data, env, rect);
 
         // layout fab
-        let FAB_MARGIN = 8.;
+        const FAB_MARGIN: f64 = 8.;
         let fab_size = self.fab.layout(layout_ctx, &loosened_bc, data, env);
-        info!("fab_size: {:?}", fab_size);
         let rect = Rect::from_origin_size(
             (
                 bc.max().width - fab_size.width - FAB_MARGIN,
