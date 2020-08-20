@@ -1,122 +1,84 @@
+pub mod mobile_friendly_widgets;
+
 use druid::kurbo::{Circle, Point, Size};
 use druid::widget::prelude::*;
 use druid::widget::{Align, Flex, Label, Padding, Painter, SizedBox};
-use druid::{theme, AppLauncher, Color, Data, Lens, PlatformError, Widget, WidgetExt, WindowDesc};
+use druid::{
+    theme, AppLauncher, Color, Data, Lens, LensWrap, PlatformError, Widget, WidgetExt, WindowDesc,
+};
 use log::info;
 
+use mobile_friendly_widgets::{AppBar, Scaffold};
+
 #[derive(Clone, Data, Lens)]
-struct Reps {
-    target_reps: u8,
-    reps: Option<u8>,
+struct State {
+    title: String,
 }
 
-impl Reps {
-    fn toggle(&mut self) {
-        self.reps = match self.reps {
-            None => Some(self.target_reps),
-            Some(current) => {
-                if current > 0 {
-                    Some(current - 1)
-                } else {
-                    None
-                }
-            }
-        };
-
-        info!("reps: {:?}", self.reps);
+impl State {
+    fn set_title(&mut self, title: String) {
+        self.title = title;
+        info!("title: {:?}", self.title);
     }
 }
 
-/*
-fn build_ui() -> impl Widget<()> {
-    Padding::new(
-        8.0,
-        Flex::row()
-            .with_flex_child(
-                Flex::column()
-                    .with_child(Align::left(Label::new("Top Left")))
-                    .with_flex_spacer(1.0)
-                    .with_child(Align::left(Label::new("Bottom Left"))),
-                1.0,
-            )
-            .with_flex_child(
-                Flex::column()
-                    .with_child(Align::right(Label::new("Top Right")))
-                    .with_flex_spacer(1.0)
-                    .with_child(Align::right(Label::new("Bottom Right"))),
-                1.0,
-            ),
-    )
-}
-*/
-
-fn rep_button() -> impl Widget<Reps> {
+fn header() -> impl Widget<State> {
     let painter = Painter::new(|ctx, _, env| {
         let bounds = ctx.size().to_rect();
+        ctx.fill(bounds, &Color::rgb8(0xff, 0x52, 0x52));
+        /*
+                let radius = (bounds.x1 - bounds.x0) / 2.0;
+                let center = Point::from((bounds.x0 + radius, bounds.y0 + radius));
 
-        //ctx.fill(bounds, &Color::rgb8(0xff, 0x52, 0x52));
+                ctx.fill(Circle::new(center, radius), &Color::rgb8(0xff, 0x52, 0x52));
 
-        let radius = (bounds.x1 - bounds.x0) / 2.0;
-        let center = Point::from((bounds.x0 + radius, bounds.y0 + radius));
+                if ctx.is_hot() {
+                    ctx.stroke(Circle::new(center, radius - 1.0), &Color::WHITE, 1.0);
+                }
 
-        ctx.fill(Circle::new(center, radius), &Color::rgb8(0xff, 0x52, 0x52));
-
-        if ctx.is_hot() {
-            ctx.stroke(Circle::new(center, radius - 1.0), &Color::WHITE, 1.0);
-        }
-
-        if ctx.is_active() {
-            ctx.fill(Circle::new(center, radius), &env.get(theme::PRIMARY_LIGHT));
-        }
+                if ctx.is_active() {
+                    ctx.fill(Circle::new(center, radius), &env.get(theme::PRIMARY_LIGHT));
+                }
+        */
     });
 
-    let label = Label::new(|reps: &Reps, _env: &_| {
-        String::from(format!("{}", reps.reps.unwrap_or(reps.target_reps)))
-    })
+    let label = Label::new(|state: &State, _env: &_| String::from(format!("{}", state.title)))
         .with_text_size(36.0)
-        .center()
-        .on_click(|_ctx, reps, _env| {
-            reps.toggle();
-        });
+        .center();
 
     let sized_box = SizedBox::new(label)
-        .width(64.)
+        .width(320.) // TODO: how do I make it full window width?
         .height(64.)
         .background(painter);
 
-    Padding::new(8.0, sized_box)
+    sized_box
+
+    //Padding::new(0.0, sized_box)
 }
 
-fn build_ui() -> impl Widget<Reps> {
-    Padding::new(8.0, 
-        Flex::row()
-        .with_flex_spacer(1.0)
-            .with_child(rep_button())
-            .with_flex_spacer(1.0)
-            .with_child(rep_button())
-            .with_flex_spacer(1.0)
-            .with_child(rep_button())
-            .with_flex_spacer(1.0)
-            .with_child(rep_button())
-            .with_flex_spacer(1.0)
-            .with_child(rep_button())
-            .with_flex_spacer(1.0)
-    )
+fn build_ui() -> impl Widget<State> {
+    //let appBar = LensWrap::new(AppBar {}, lenses: state::title);
+    //Padding::new(0.0, Flex::column().with_child(AppBar {}))
+
+    let app_bar = AppBar::new(String::from("Hello World"));
+    let label = Label::new("How are you?").with_text_size(18.0).center();
+    let body = Padding::new(8.0, label);
+    let scaffold = Scaffold::new(app_bar, body);
+    scaffold
 }
 
 fn main() -> Result<(), PlatformError> {
-    let reps = Reps {
-        target_reps: 8,
-        reps: None,
+    let state = State {
+        title: "Workouts".to_string(),
     };
 
     let main_window = WindowDesc::new(build_ui)
         .show_titlebar(false)
-        .window_size(Size::new(720.0, 1320.0));
+        .window_size(Size::new(320.0, 480.0));
 
     AppLauncher::with_window(main_window)
         .use_simple_logger()
-        .launch(reps)?;
+        .launch(state)?;
 
     Ok(())
 }
